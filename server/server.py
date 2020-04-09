@@ -1,5 +1,4 @@
 import hug
-import os
 import falcon
 from core.plotter import CommandPlotter, CommandError, CountryError, DaysError, PlottingError
 
