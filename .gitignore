@@ -1,0 +1,11 @@
+__pycache__
+*.egg-info
+plotter/bin/
+plotter/share/
+plotter/lib/
+plotter/lib64
+plotter/pyvenv.cfg
+core/bash_scripts/dummy
+core/bash_scripts/fit.log
+server/dummy
+*.pyc
