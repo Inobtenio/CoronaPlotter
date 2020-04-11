@@ -1,34 +1,25 @@
 from datetime import datetime
-import requests
 import pathlib
 import pandas
-import json
 
 CURRENT_PATH = pathlib.Path(__file__).parent.absolute()
 DATA_PATH = pathlib.Path(CURRENT_PATH.parent, 'data')
-COUNTRIES_JSON_PATH = pathlib.Path(DATA_PATH, 'countries.json')
 UNREASONABLE_FAR_DATE = '12/12/40'
-CSSE_TOTAL_DATAFILE = {
-        'original_version_path': pathlib.Path(DATA_PATH, 'csse_total.csv'),
+TOTAL_DATA = {
         'url': 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv',
-        'restructured_version_path': pathlib.Path(DATA_PATH, 'total_history.csv'),
+        'local_path': pathlib.Path(DATA_PATH, 'total_history.csv'),
 }
-CSSE_DEATHS_DATAFILE = {
-        'original_version_path': pathlib.Path(DATA_PATH, 'csse_deaths.csv'),
+DEATHS_DATA = {
         'url': 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv',
-        'restructured_version_path': pathlib.Path(DATA_PATH, 'deaths_history.csv'),
+        'local_path': pathlib.Path(DATA_PATH, 'deaths_history.csv'),
 }
-CSSE_RECOVERIES_DATAFILE = {
-        'original_version_path': pathlib.Path(DATA_PATH, 'csse_recovered.csv'),
+RECOVERIES_DATA = {
         'url': 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv',
-        'restructured_version_path': pathlib.Path(DATA_PATH, 'recovered_history.csv'),
+        'local_path': pathlib.Path(DATA_PATH, 'recovered_history.csv'),
 }
 
-def download_data(datafile_options):
-    r = requests.get(datafile_options['url'])
-    file = open(datafile_options['original_version_path'], 'w')
-    file.write(r.text)
-    file.close()
+def get_dataframe(url):
+    return pandas.read_csv(url)
 
 def remove_unused_columns(dataframe):
     del dataframe['Lat']
@@ -59,16 +50,15 @@ def insert_dates_row(dataframe):
     dataframe.sort_index(inplace=True)
 
 def append_today_row(dataframe):
-    row = [datetime.now().strftime("%-m/%d/%y")]
+    row = [datetime.now().strftime("%-m/%-d/%y")]
     row += list(dataframe.loc[dataframe.shape[0]-1].values)[1:]
     dataframe = dataframe.append(pandas.DataFrame([row], columns=dataframe.columns))
     return dataframe
 
 def missing_today_data(dataframe):
-    return not dataframe.iloc[-1]['date'] == datetime.now().strftime("%-m/%d/%y")
+    return not dataframe.iloc[-1]['date'] == datetime.now().strftime("%-m/%-d/%y")
 
-def restructure_data(datafile_options):
-    dataframe = pandas.read_csv(datafile_options['original_version_path'])
+def restructure_and_save_data(dataframe, local_path):
     remove_unused_columns(dataframe)
 
     dataframe['Country/Region'] = [x.lower() for x in dataframe['Country/Region'].values]
@@ -80,19 +70,19 @@ def restructure_data(datafile_options):
 
     if missing_today_data(dataframe): dataframe = append_today_row(dataframe)
 
-    dataframe.to_csv(datafile_options['restructured_version_path'], index=False)
+    dataframe.to_csv(local_path, index=False)
 
 def download_and_restructure_cases_data():
-    download_data(CSSE_TOTAL_DATAFILE)
-    restructure_data(CSSE_TOTAL_DATAFILE)
+    dataframe = get_dataframe(TOTAL_DATA['url'])
+    restructure_and_save_data(dataframe, TOTAL_DATA['local_path'])
 
 def download_and_restructure_deaths_data():
-    download_data(CSSE_DEATHS_DATAFILE)
-    restructure_data(CSSE_DEATHS_DATAFILE)
+    dataframe = get_dataframe(DEATHS_DATA['url'])
+    restructure_and_save_data(dataframe, DEATHS_DATA['local_path'])
 
 def download_and_restructure_recoveries_data():
-    download_data(CSSE_RECOVERIES_DATAFILE)
-    restructure_data(CSSE_RECOVERIES_DATAFILE)
+    dataframe = get_dataframe(RECOVERIES_DATA['url'])
+    restructure_and_save_data(dataframe, RECOVERIES_DATA['local_path'])
 
 download_and_restructure_cases_data()
 download_and_restructure_deaths_data()

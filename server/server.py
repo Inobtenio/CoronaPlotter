@@ -25,8 +25,6 @@ def info():
             {}
             Powered by:
             Johns Hopkins CSSE (https://github.com/CSSEGISandData/COVID-19)
-            Coronavirus Tracker (https://thevirustracker.com)
-            COVID API by Javier Aviles (https://github.com/javieraviles/covidAPI)
             """
 
     return {'status': 'ok', 'message': text}
