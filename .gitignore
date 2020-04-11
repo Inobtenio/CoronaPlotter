@@ -7,5 +7,6 @@ plotter/lib64
 plotter/pyvenv.cfg
 core/bash_scripts/dummy
 core/bash_scripts/fit.log
+core/plots/
 server/dummy
 *.pyc
