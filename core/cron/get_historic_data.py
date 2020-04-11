@@ -5,22 +5,23 @@ import pandas
 import json
 
 CURRENT_PATH = pathlib.Path(__file__).parent.absolute()
-COUNTRIES_JSON_PATH = pathlib.Path(CURRENT_PATH, 'countries.json')
+DATA_PATH = pathlib.Path(CURRENT_PATH.parent, 'data')
+COUNTRIES_JSON_PATH = pathlib.Path(DATA_PATH, 'countries.json')
 UNREASONABLE_FAR_DATE = '12/12/40'
 CSSE_TOTAL_DATAFILE = {
-        'original_version_path': pathlib.Path(CURRENT_PATH, 'csse_total.csv'),
+        'original_version_path': pathlib.Path(DATA_PATH, 'csse_total.csv'),
         'url': 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv',
-        'restructured_version_path': pathlib.Path(CURRENT_PATH, 'total_history.csv'),
+        'restructured_version_path': pathlib.Path(DATA_PATH, 'total_history.csv'),
 }
 CSSE_DEATHS_DATAFILE = {
-        'original_version_path': pathlib.Path(CURRENT_PATH, 'csse_deaths.csv'),
+        'original_version_path': pathlib.Path(DATA_PATH, 'csse_deaths.csv'),
         'url': 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv',
-        'restructured_version_path': pathlib.Path(CURRENT_PATH, 'deaths_history.csv'),
+        'restructured_version_path': pathlib.Path(DATA_PATH, 'deaths_history.csv'),
 }
 CSSE_RECOVERIES_DATAFILE = {
-        'original_version_path': pathlib.Path(CURRENT_PATH, 'csse_recovered.csv'),
+        'original_version_path': pathlib.Path(DATA_PATH, 'csse_recovered.csv'),
         'url': 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv',
-        'restructured_version_path': pathlib.Path(CURRENT_PATH, 'recovered_history.csv'),
+        'restructured_version_path': pathlib.Path(DATA_PATH, 'recovered_history.csv'),
 }
 
 def download_data(datafile_options):
