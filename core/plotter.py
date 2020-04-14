@@ -89,7 +89,7 @@ class CommandValidator(object):
 
 class CommandPlotter:
     def execute(self, command, country, days):
-        plotter = factory.get_command_plotter(command, country, days)
+        plotter = factory.get_command_plotter(command.lower(), country.lower(), days)
         return plotter.plot()
 
 
