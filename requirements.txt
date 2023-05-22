@@ -1,4 +1,4 @@
 hug==2.6.1
 pandas==1.0.3
-requests==2.23.0
+requests==2.31.0
 gunicorn==20.0.4
